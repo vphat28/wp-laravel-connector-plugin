@@ -2,6 +2,8 @@
 
 namespace simpleCRM\classes;
 
+if(!defined('ABSPATH')) {die('You are not allowed to call this page directly.');}
+
 class LaravelConnector {
   public function __construct() {
     $this->load_hooks();
@@ -29,6 +31,7 @@ class LaravelConnector {
       $phone_number = filter_var($request['phone_number']);
       $desired_budget = filter_var($request['desired_budget'], FILTER_VALIDATE_FLOAT);
       $message = filter_var($request['message']);
+      $laravel_user_url = filter_var($request['laravel_user_url'], FILTER_VALIDATE_URL);
 
       $user_id = username_exists( $user_email );
 
@@ -48,6 +51,7 @@ class LaravelConnector {
           update_user_meta($user_id, 'desired_budget', $desired_budget);
           update_user_meta($user_id, 'message', $message);
           update_user_meta($user_id, 'laravel_user_id', $laravel_user_id);
+          update_user_meta($user_id, 'laravel_user_url', $laravel_user_url);
           wp_send_json_success(new \WP_User($user_id));
         } else {
           wp_send_json_error(__('Can not create user'), 400);
